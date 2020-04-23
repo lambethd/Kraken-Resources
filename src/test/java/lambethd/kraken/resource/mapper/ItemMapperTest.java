@@ -29,15 +29,15 @@ public class ItemMapperTest {
         Item single = itemResponse.get(0);
         Assert.assertEquals("icon", single.iconLink);
         Assert.assertEquals("icon_large", single.largeIconLink);
-        Assert.assertEquals(12123, single.id);
+        Assert.assertEquals(Integer.valueOf(12123), single.id);
         Assert.assertEquals(ItemCategory.Familiars, single.type);
         Assert.assertEquals("type_icon", single.typeIconLink);
         Assert.assertEquals("name", single.name);
         Assert.assertEquals("desc", single.description);
         Assert.assertEquals(Trend.Neutral, single.current.trend);
-        Assert.assertEquals(1192, single.current.price);
+        Assert.assertEquals(1192, single.current.price, 0);
         Assert.assertEquals(Trend.Positive, single.today.trend);
-        Assert.assertEquals(8, single.today.price);
+        Assert.assertEquals(8, single.today.price, 0);
         Assert.assertEquals(true, single.members);
     }
 }
