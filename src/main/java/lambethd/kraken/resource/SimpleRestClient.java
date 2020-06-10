@@ -15,7 +15,7 @@ public class SimpleRestClient {
         URL url = new URL(urlString);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
-        conn.setRequestProperty("Accept", "text/html");
+        conn.setRequestProperty("Accept", "*/*");
         if (conn.getResponseCode() != 200) {
             throw new RuntimeException("Failed : HTTP error code : "
                     + conn.getResponseCode());
@@ -25,10 +25,8 @@ public class SimpleRestClient {
                 (conn.getInputStream())));
         StringBuilder sb = new StringBuilder();
         String output;
-        System.out.println("Output from Server...");
         while ((output = br.readLine()) != null) {
             sb.append(output);
-            System.out.println(output);
         }
 
         conn.disconnect();

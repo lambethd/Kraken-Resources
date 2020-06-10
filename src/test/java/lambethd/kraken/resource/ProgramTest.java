@@ -2,6 +2,7 @@ package lambethd.kraken.resource;
 
 import lambethd.kraken.data.mongo.repository.IItemRepository;
 import lambethd.kraken.resource.interfaces.IItemApi;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ResourceConfiguration.class})
+@Ignore
 public class ProgramTest {
     @Autowired
     private IItemApi itemApi;

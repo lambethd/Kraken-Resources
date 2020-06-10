@@ -1,25 +1,29 @@
 package lambethd.kraken.resource.interfaces;
 
 import lambethd.kraken.resource.ResourceConfiguration;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import runescape.Graph;
+import runescape.HistoricalData;
+import runescape.Item;
 
 import java.io.IOException;
+import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ResourceConfiguration.class})
 @Ignore
-public class IGraphApiTest {
+public class IHistoricalDataApiTest {
     @Autowired
-    private IGraphApi graphApi;
+    private IHistoricalDataApi client;
 
     @Test
-    public void getGraph_GivenAValidItemId_ReturnsAValidGraph() throws IOException {
-        Graph graph = graphApi.getGraph(21787);
+    public void TestApiCall() throws IOException {
+        List<HistoricalData> historicalData = client.getHistoricalData("Armadyl chestplate shard");
+        Assert.assertNotNull(historicalData);
     }
 }

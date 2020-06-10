@@ -23,7 +23,7 @@ public class InfoMapperTest {
     public void TestMapping() throws IOException {
         Runeday info = mapper.mapToInfoDto("{\"lastConfigUpdateRuneday\":6613}");
         Assert.assertNotNull(info);
-        Assert.assertEquals(6613, info.lastConfigUpdateRuneday);
+        Assert.assertEquals(6613, info.lastConfigUpdateRuneday, 0);
     }
 
 }

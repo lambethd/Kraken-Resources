@@ -6,12 +6,14 @@ import org.springframework.stereotype.Service;
 import runescape.*;
 
 import java.io.IOException;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Service
-public class RsApi implements IInfoApi, IItemApi, ICatalogueApi, IGraphApi {
+public class RsApi implements IInfoApi, IItemApi, ICatalogueApi, IGraphApi, IHistoricalDataApi {
     @Autowired
     private SimpleRestClient client;
     @Autowired
@@ -22,16 +24,26 @@ public class RsApi implements IInfoApi, IItemApi, ICatalogueApi, IGraphApi {
     private ICatalogueMapper catalogueMapper;
     @Autowired
     private IGraphMapper graphMapper;
+    @Autowired
+    private IHistoricalDataMapper historicalDataMapper;
+
+    private Runeday runedayCache;
 
     //region IInfoApi
     public Runeday getInfo() throws IOException {
-        try {
-            String response = client.get(UrlConstants.URL_PREFIX + UrlConstants.INFO_SUFFIX);
-            return infoMapper.mapToInfoDto(response);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw e;
+        int hour = LocalDateTime.now(Clock.systemUTC()).getHour();
+        if (runedayCache == null || hour >= 23) {
+            try {
+                String response = client.get(UrlConstants.URL_PREFIX + UrlConstants.INFO_SUFFIX);
+                runedayCache = infoMapper.mapToInfoDto(response);
+                return runedayCache;
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw e;
+            }
         }
+
+        return runedayCache;
     }
     //endregion
 
@@ -41,7 +53,6 @@ public class RsApi implements IInfoApi, IItemApi, ICatalogueApi, IGraphApi {
         try {
             List<Item> results = new ArrayList<>();
             for (ItemCategory value : ItemCategory.values()) {
-                //TODO:Replace 1 with 26 below
                 for (int l = 0; l < 26; l++) {
                     String urlSuffix = UrlConstants.ITEM_SUFFIX
                             .replace(UrlConstants.CATEGORY_ID_REPLACE, String.valueOf(value.ordinal()))
@@ -83,8 +94,22 @@ public class RsApi implements IInfoApi, IItemApi, ICatalogueApi, IGraphApi {
         try {
             String response = client.get(UrlConstants.URL_PREFIX + UrlConstants.GRAPH_SUFFIX.replace(UrlConstants.ITEM_ID_REPLACE, String.valueOf(itemId)));
             Graph graph = graphMapper.mapToGraph(response);
-            graph.itemId = itemId;
+            graph.id = itemId;
             return graph;
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+    //endregion
+
+    //region IHistoricalDataApi
+    @Override
+    public List<HistoricalData> getHistoricalData(String itemName) throws IOException {
+        try {
+            String response = client.get(UrlConstants.WIKI_PREFIX.replace(UrlConstants.ITEM_NAME_REPLACE, itemName.replace(" ", "_")));
+            List<HistoricalData> data = historicalDataMapper.mapToHistoricalData(response);
+            return data;
         } catch (IOException e) {
             e.printStackTrace();
             throw e;
