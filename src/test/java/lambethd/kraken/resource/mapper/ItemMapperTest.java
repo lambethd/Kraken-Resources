@@ -10,6 +10,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import runescape.ItemCategory;
 import runescape.Item;
+import runescape.Runeday;
 import runescape.Trend;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class ItemMapperTest {
 
     @Test
     public void TestMapping() throws IOException {
-        List<Item> itemResponse = mapper.mapToItemDto("{\"total\":97,\"items\":[{\"icon\":\"icon\",\"icon_large\":\"icon_large\",\"id\":12123,\"type\":\"Familiars\",\"typeIcon\":\"type_icon\",\"name\":\"name\",\"description\":\"desc\",\"current\":{\"trend\":\"neutral\",\"price\":\"1,192\"},\"today\":{\"trend\":\"positive\",\"price\":\"8\"},\"members\":\"true\"}]}");
+        List<Item> itemResponse = mapper.mapToItemDto("{\"total\":97,\"items\":[{\"icon\":\"icon\",\"icon_large\":\"icon_large\",\"id\":12123,\"type\":\"Familiars\",\"typeIcon\":\"type_icon\",\"name\":\"name\",\"description\":\"desc\",\"current\":{\"trend\":\"neutral\",\"price\":\"1,192\"},\"today\":{\"trend\":\"positive\",\"price\":\"8\"},\"members\":\"true\"}]}", new Runeday(10));
         Assert.assertNotNull(itemResponse);
         Assert.assertEquals(1, itemResponse.size());
         Item single = itemResponse.get(0);

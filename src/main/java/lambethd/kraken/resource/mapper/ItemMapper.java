@@ -7,10 +7,7 @@ import lambethd.kraken.resource.interfaces.IPriceMapper;
 import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import runescape.ItemCategory;
-import runescape.Item;
-import runescape.ItemMovement;
-import runescape.Trend;
+import runescape.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,7 +20,7 @@ public class ItemMapper implements IItemMapper {
     @Autowired
     private IPriceMapper priceMapper;
 
-    public List<Item> mapToItemDto(String itemResponseString) throws IOException {
+    public List<Item> mapToItemDto(String itemResponseString, Runeday runeday) throws IOException {
         if(itemResponseString.equals("")){
             return new ArrayList<>();
         }
@@ -40,6 +37,8 @@ public class ItemMapper implements IItemMapper {
             item.current = internalMapToItemMovement(a.current);
             item.today = internalMapToItemMovement(a.today);
             item.members = a.members;
+            item.lastUpdatedRuneDay = runeday.lastConfigUpdateRuneday;
+            System.out.println(item.lastUpdatedRuneDay);
             return item;
         }).collect(Collectors.toList());
         return items;

@@ -5,7 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import runescape.*;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -62,7 +65,7 @@ public class RsApi implements IInfoApi, IItemApi, ICatalogueApi, IGraphApi, IHis
                     do {
                         String response = client.get(UrlConstants.URL_PREFIX + urlSuffix.replace(UrlConstants.PAGE_ID_REPLACE, String.valueOf(pageCount)));
                         pageCount++;
-                        responseDtos = itemMapper.mapToItemDto(response);
+                        responseDtos = itemMapper.mapToItemDto(response, getInfo());
                         results.addAll(responseDtos);
                     } while (responseDtos.size() == 12);
                 }
@@ -107,7 +110,14 @@ public class RsApi implements IInfoApi, IItemApi, ICatalogueApi, IGraphApi, IHis
     @Override
     public List<HistoricalData> getHistoricalData(String itemName) throws IOException {
         try {
-            String response = client.get(UrlConstants.WIKI_PREFIX.replace(UrlConstants.ITEM_NAME_REPLACE, itemName.replace(" ", "_")));
+            URL url = new URL(UrlConstants.WIKI_PREFIX.replace(UrlConstants.ITEM_NAME_REPLACE, itemName.replace(" ", "_")));
+            StringBuilder sb = new StringBuilder();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"))) {
+                for (String line; (line = reader.readLine()) != null;) {
+                   sb.append(line).append("\n");
+                }
+            }
+            String response = sb.toString();
             List<HistoricalData> data = historicalDataMapper.mapToHistoricalData(response);
             return data;
         } catch (IOException e) {
