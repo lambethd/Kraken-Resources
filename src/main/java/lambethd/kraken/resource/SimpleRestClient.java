@@ -16,6 +16,7 @@ public class SimpleRestClient {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Accept", "*/*");
+        conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36");
         if (conn.getResponseCode() != 200) {
             throw new RuntimeException("Failed : HTTP error code : "
                     + conn.getResponseCode());
