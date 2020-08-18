@@ -6,8 +6,6 @@ import org.springframework.stereotype.Service;
 import runescape.*;
 
 import java.io.IOException;
-import java.time.Clock;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,23 +25,15 @@ public class RsApi implements IInfoApi, IItemApi, ICatalogueApi, IGraphApi, IHis
     @Autowired
     private IHistoricalDataMapper historicalDataMapper;
 
-    private Runeday runedayCache;
-
     //region IInfoApi
     public Runeday getInfo() throws IOException {
-        int hour = LocalDateTime.now(Clock.systemUTC()).getHour();
-        if (runedayCache == null || hour >= 23) {
-            try {
-                String response = client.get(UrlConstants.URL_PREFIX + UrlConstants.INFO_SUFFIX);
-                runedayCache = infoMapper.mapToInfoDto(response);
-                return runedayCache;
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw e;
-            }
+        try {
+            String response = client.get(UrlConstants.URL_PREFIX + UrlConstants.INFO_SUFFIX);
+            return infoMapper.mapToInfoDto(response);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw e;
         }
-
-        return runedayCache;
     }
     //endregion
 

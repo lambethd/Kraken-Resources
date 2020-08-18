@@ -1,5 +1,7 @@
 package lambethd.kraken.resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -10,8 +12,10 @@ import java.net.URL;
 
 @Service
 public class SimpleRestClient {
+    Logger logger = LoggerFactory.getLogger(this.getClass());
+
     public String get(String urlString) throws IOException {
-        System.out.println("Request: " + urlString);
+        logger.debug("Request: " + urlString);
         URL url = new URL(urlString);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");

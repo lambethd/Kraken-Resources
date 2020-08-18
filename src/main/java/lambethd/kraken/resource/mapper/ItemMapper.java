@@ -38,7 +38,6 @@ public class ItemMapper implements IItemMapper {
             item.today = internalMapToItemMovement(a.today);
             item.members = a.members;
             item.lastUpdatedRuneDay = runeday.lastConfigUpdateRuneday;
-            System.out.println(item.lastUpdatedRuneDay);
             return item;
         }).collect(Collectors.toList());
         return items;
