@@ -12,6 +12,7 @@ import runescape.Item;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ResourceConfiguration.class})
@@ -22,7 +23,7 @@ public class IItemApiTest {
 
     @Test
     public void TestApiCall() throws IOException {
-        List<Item> items = client.getItems();
+        List<Item> items = client.getItems().collect(Collectors.toList());
         Assert.assertNotNull(items);
     }
 }

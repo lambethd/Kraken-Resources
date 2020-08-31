@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 import runescape.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Service
 public class RsApi implements IInfoApi, IItemApi, ICatalogueApi, IGraphApi, IHistoricalDataApi {
@@ -39,29 +39,30 @@ public class RsApi implements IInfoApi, IItemApi, ICatalogueApi, IGraphApi, IHis
 
     //region IItemApi
     @Override
-    public List<Item> getItems() throws IOException {
-        try {
-            List<Item> results = new ArrayList<>();
-            for (ItemCategory value : ItemCategory.values()) {
-                for (int l = 0; l < 26; l++) {
+    public Stream<Item> getItems() throws IOException {
+        Stream<String> characters = IntStream.rangeClosed('a', 'z').mapToObj(i -> "" + ((char) i));
+
+        return Arrays.stream(ItemCategory.values())
+                .flatMap(i -> IntStream.rangeClosed('a', 'z').mapToObj(l -> "" + ((char) l)).map(c -> {
+                    List<Item> responseDtos = new ArrayList<>();
+                    List<Item> results = new ArrayList<>();
                     String urlSuffix = UrlConstants.ITEM_SUFFIX
-                            .replace(UrlConstants.CATEGORY_ID_REPLACE, String.valueOf(value.ordinal()))
-                            .replace(UrlConstants.ALPHA_REPLACE, String.valueOf((char) (l + 97)));
-                    List<Item> responseDtos;
+                            .replace(UrlConstants.CATEGORY_ID_REPLACE, String.valueOf(i.ordinal()))
+                            .replace(UrlConstants.ALPHA_REPLACE, c);
                     int pageCount = 1;
                     do {
-                        String response = client.get(UrlConstants.URL_PREFIX + urlSuffix.replace(UrlConstants.PAGE_ID_REPLACE, String.valueOf(pageCount)));
-                        pageCount++;
-                        responseDtos = itemMapper.mapToItemDto(response, getInfo());
-                        results.addAll(responseDtos);
+                        try {
+                            String response = client.get(UrlConstants.URL_PREFIX + urlSuffix.replace(UrlConstants.PAGE_ID_REPLACE, String.valueOf(pageCount)));
+                            pageCount++;
+                            responseDtos = itemMapper.mapToItemDto(response, getInfo());
+                            results.addAll(responseDtos);
+                        } catch (IOException e) {
+                            //Do nothing, I don't really care
+                            //TODO: probably deal with this at some point
+                        }
                     } while (responseDtos.size() == 12);
-                }
-            }
-            return results;
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw e;
-        }
+                    return results;
+                })).flatMap(Collection::stream);
     }
     //endregion
 

@@ -12,6 +12,7 @@ import runescape.Item;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ResourceConfiguration.class})
@@ -24,7 +25,7 @@ public class ProgramTest {
 
     @Test
     public void TestGetItemsAndStoreInRepo() throws IOException {
-        List<Item> items = itemApi.getItems();
+        List<Item> items = itemApi.getItems().collect(Collectors.toList());
         itemRepo.insert(items);
     }
 }

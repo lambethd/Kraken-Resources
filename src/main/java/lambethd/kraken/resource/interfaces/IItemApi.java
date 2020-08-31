@@ -5,8 +5,9 @@ import runescape.Item;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public interface IItemApi {
-    List<Item> getItems() throws IOException;
+    Stream<Item> getItems() throws IOException;
 }
