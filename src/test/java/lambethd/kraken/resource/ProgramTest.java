@@ -1,6 +1,5 @@
 package lambethd.kraken.resource;
 
-import lambethd.kraken.data.mongo.repository.IItemRepository;
 import lambethd.kraken.resource.interfaces.IItemApi;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -20,12 +19,9 @@ import java.util.stream.Collectors;
 public class ProgramTest {
     @Autowired
     private IItemApi itemApi;
-    @Autowired
-    private IItemRepository itemRepo;
 
     @Test
     public void TestGetItemsAndStoreInRepo() throws IOException {
         List<Item> items = itemApi.getItems().collect(Collectors.toList());
-        itemRepo.insert(items);
     }
 }
