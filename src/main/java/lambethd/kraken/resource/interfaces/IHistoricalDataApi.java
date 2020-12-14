@@ -8,5 +8,5 @@ import java.util.List;
 
 @Service
 public interface IHistoricalDataApi {
-    List<HistoricalData> getHistoricalData(String itemName) throws IOException;
+    List<HistoricalData> getHistoricalData(int itemId) throws IOException;
 }

@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 @Service
-public class RsApi implements IInfoApi, IItemApi, ICatalogueApi, IGraphApi, IHistoricalDataApi {
+public class RsApi implements IInfoApi, IItemApi, ICatalogueApi, IGraphApi {
     @Autowired
     private SimpleRestClient client;
     @Autowired
@@ -95,15 +95,15 @@ public class RsApi implements IInfoApi, IItemApi, ICatalogueApi, IGraphApi, IHis
     //endregion
 
     //region IHistoricalDataApi
-    @Override
-    public List<HistoricalData> getHistoricalData(String itemName) throws IOException {
-        try {
-            String response = client.get(UrlConstants.WIKI_PREFIX.replace(UrlConstants.ITEM_NAME_REPLACE, itemName.replace(" ", "_")));
-            return historicalDataMapper.mapToHistoricalData(response);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw e;
-        }
-    }
+//    @Override
+//    public List<HistoricalData> getHistoricalData(String itemName) throws IOException {
+//        try {
+//            String response = client.get(UrlConstants.WIKI_PREFIX.replace(UrlConstants.ITEM_NAME_REPLACE, itemName.replace(" ", "_")));
+//            return historicalDataMapper.mapToHistoricalData(response);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            throw e;
+//        }
+//    }
     //endregion
 }

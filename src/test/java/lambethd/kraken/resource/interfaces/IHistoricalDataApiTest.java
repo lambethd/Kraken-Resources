@@ -16,14 +16,14 @@ import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ResourceConfiguration.class})
-@Ignore
 public class IHistoricalDataApiTest {
     @Autowired
     private IHistoricalDataApi client;
 
     @Test
     public void TestApiCall() throws IOException {
-        List<HistoricalData> historicalData = client.getHistoricalData("Armadyl chestplate shard");
+        List<HistoricalData> historicalData = client.getHistoricalData(28608);
+        System.out.println(historicalData.size());
         Assert.assertNotNull(historicalData);
     }
 }
